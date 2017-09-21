@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+group = 'com.yourdomain'
+version = '1.0'
+repositories {
+    mavenCentral ()
+}
+
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+        	'Implementation-Version': 1,
+        	'Main-Class': 'com.cb.flanker'
+    }
+    
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
+
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+            url "file:/${project.projectDir}/artifacts/chirag"
+        }
+    }
+}

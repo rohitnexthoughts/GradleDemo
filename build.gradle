@@ -1,0 +1,169 @@
+
+apply plugin: "java"
+
+
+
+
+
+
+repositories{
+	mavenCentral()
+}
+
+
+
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main']
+        }
+        
+    }
+}
+
+dependencies{
+	compile 'org.apache.commons:commons-lang3:3.3.2'
+}
+
+jar{
+	from configurations.compile.collect { zipTree it }
+	manifest.attributes 'Main-Class' : 'com.Main'
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+task taskDemo{
+	println "Configuration Part"
+	
+	doLast{
+		println "Do Last Block"
+	}
+	doFirst{
+		println "Do First Block"
+	}
+}
+
+
+task a << {
+	println "Task A"
+}
+
+task b(dependsOn: a) << {
+	println "Task B"
+}
+
+
+def taskNames = ["Task1", "Task2", "Task3"]
+taskNames.each{ name->
+	tasks.create(name) << {
+		println name
+	}
+}
+
+task runJar(type:Exec, dependsOn: jar){
+	executable 'java'
+	args '-jar', "${jar.archivePath}", "Hello World", "Last Example", "final"
+}
+
+
+task cleanup << {
+	println "clean up"
+
+}
+
+task task1 << {
+
+	println "task run"
+
+}
+
+task1.finalizedBy cleanup
+
+
+
+ext.demo="Gradle"
+
+task demoName<<{
+	println demo
+}
+
+
+
+
+
+
+/*repositories{
+	mavenCentral()
+}
+
+apply plugin: "java"
+
+
+dependencies{
+	compile 'org.apache.commons:commons-lang3:3.3.2'
+}
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main']
+        }
+        
+    }
+}
+//A SourceSet represents a logical group of Java source and resources.
+//You configure the project layout by configuring the appropriate source set.
+
+jar{
+	from configurations.compile.collect { zipTree it }
+
+
+	from('/home/nexthought') {
+	   include 'b.class'
+	}
+	manifest.attributes 'Main-Class' : 'com.Main'
+}
+
+task task1{
+
+println "configuration part"
+doLast{
+	println "do Last block"
+}
+
+doFirst{
+	println "do first block"
+}
+}
+task runJar(type:Exec, dependsOn: jar){
+	executable 'java'
+	args '-jar', "${jar.archivePath}", "Hello World", "Last Example", "final"
+}
+//Executes a command line process
+
+
+task cleanup{
+	println "clean up"
+}
+
+task run{
+
+	println "task run"
+}
+
+run.finalizedBy cleanup
+
+*/
+
+//  /home/nexthought/.gradle/caches/modules-2/files-2.1/org.apache.commons
